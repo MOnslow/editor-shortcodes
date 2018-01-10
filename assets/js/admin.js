@@ -1,4 +1,4 @@
-$(document).ready(function() {
+jQuery(document).ready(function($) {
 
 	// Clipboard
 	var clipboard = new Clipboard('.clipboard');
@@ -28,9 +28,14 @@ $(document).ready(function() {
 
 	// Update shortcode name
 	let $shortcode_value = $('#es_shortcode').val();
+	console.log($shortcode_value);
 	$('body').on('focusout', '#es_shortcode', function(){
 		let $new_shortcode_value = $(this).val();
-		$output = $output.replace($shortcode_value, $new_shortcode_value);
+		if ($shortcode_value != '') {
+			$output = $output.replace($shortcode_value, $new_shortcode_value);
+		} else {
+			$output = $output.replace('[]', '['+$new_shortcode_value+']');
+		}
 		$('#es_rendered_shortcode').val($output);
 	});
 	$('body').on('focusin', '#es_shortcode', function(){

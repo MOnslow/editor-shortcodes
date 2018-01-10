@@ -97,7 +97,7 @@ function editor_shortcodes_postmeta() {
 					$output .= '[/'.$meta['es_shortcode'][0].']';
 				}
 			?>
-			<input name="es_rendered_shortcode" type="text" value="<?php echo htmlspecialchars($output); ?>" id="es_rendered_shortcode" />
+			<input name="es_rendered_shortcode" type="hidden" value="<?php echo htmlspecialchars($output); ?>" id="es_rendered_shortcode" />
 
 			<?php if (!empty($meta['es_shortcode'][0])) : ?>
 				<div class="es-shortcode-preview">
@@ -109,72 +109,78 @@ function editor_shortcodes_postmeta() {
 			<label for="es_shortcode">Shortcode <small>Lowercase, no spaces - use underscores.</small></label>
 			<input type="text" name="es_shortcode" id="es_shortcode" class="update-field" value="<?php echo $meta['es_shortcode'][0]; ?>" required>
 
-			<label for="es_description">Description <small>For reference</small></label>
-			<textarea name="es_description" id="es_description"><?php echo $meta['es_description'][0]; ?></textarea>
+			<?php if (!$meta['es_shortcode'][0]) : ?>
 
-			<label>Type <small>Either a single line shortcode, or one that wraps content.</small></label>
-			<div class="radio-group">
-				<label for="es_shortcode_type_single"><input type="radio" name="es_shortcode_type" id="es_shortcode_type_single" value="single" checked <?php if ($meta['es_shortcode_type'][0] == 'single'){ echo ' checked="checked"'; } ?>>Standalone</label>
-				<label for="es_shortcode_type_multi"><input type="radio" name="es_shortcode_type" id="es_shortcode_type_multi" value="multi" <?php if ($meta['es_shortcode_type'][0] == 'multi'){ echo ' checked="checked"'; } ?>>Wrapping</label>
-			</div>
+				<p class="no-shortcode-message">Please save your shortcode for more options.</p>
 
-			<div class="placeholder-content">
-				<label for="editor_shortcode_content">Placeholder Content</label>
-				<input type="text" name="editor_shortcode_content" id="editor_shortcode_content" value="<?php echo $meta['editor_shortcode_content'][0]; ?>">
-			</div>
+			<?php else : ?>
 
-			<label>Attributes <small>Allow for customisation of shortcodes.</small></label>
-			<?php
-				$c = 0;
-				if ( count( $attributes ) > 0 ) {
-					foreach( $attributes[0] as $attribute ) {
-						if ( isset( $attribute['key'] ) || isset( $attribute['value'] ) ) {
-							printf( '<div class="row"><div class="col-xs-5 col-lg-4"><label>Attribute <small>Lowercase, no spaces - use underscores.</small></label><input type="text" class="update-field" name="es_attributes[%1$s][key]" value="%2$s" /></div><div class="col-xs-5 col-lg-7"><label>Hint <small>Explain what values are expected</small></label><input type="text" name="es_attributes[%1$s][value]" value="%3$s" /></div><div class="col-xs-2 col-lg-1"><label>&nbsp;</label><span class="remove-attribute button button-secondary">%4$s</span></div></div>', $c, $attribute['key'], $attribute['value'], '<span class="dashicons dashicons-trash"></span>');
-							$c = $c +1;
-						}
-					}
-				}
-			?>
-			<div id="attribute-list"></div>
-			<a class="add-attribute button button-primary button-hero" href="#">Add Attribute</a>
-			<script>
-				var $ =jQuery.noConflict();
-				$(document).ready(function() {
-					var count = <?php echo $c; ?>;
-					$('.add-attribute').click(function() {
-						count = count + 1;
-						if (count < 11) {
-							$('#attribute-list').append('<div class="row"><div class="col-xs-5 col-lg-4"><label>Attribute <small>Lowercase, no spaces - use underscores.</small></label><input type="text" class="update-field" name="es_attributes['+count+'][key]" value="" /></div><div class="col-xs-5 col-lg-7"><label>Hint <small>Explain what values are expected</small></label><input type="text" name="es_attributes['+count+'][value]" value="" /></div><div class="col-xs-2 col-lg-1"><label>&nbsp;</label><span class="remove-attribute button button-secondary"><span class="dashicons dashicons-trash"></span></span></div></div>' );
-						} else {
-							alert('Easy tiger, let\'s not add too many attributes!');
-						}
-						return false;
-					});
-					$('body').on('click', '.remove-attribute', function() {
-						$(this).parents('.row').remove();
-					});
-				});
-			</script>
+				<label for="es_description">Description <small>For reference</small></label>
+				<textarea name="es_description" id="es_description"><?php echo $meta['es_description'][0]; ?></textarea>
 
-			<div class="es-shortcode-render">
-				<label for="es_rendered_html">Rendered HTML <small>What the shortcodde gets replaced with when rendered. Use variables as outlined below.</small></label>
+				<label>Type <small>Either a single line shortcode, or one that wraps content.</small></label>
+				<div class="radio-group">
+					<label for="es_shortcode_type_single"><input type="radio" name="es_shortcode_type" id="es_shortcode_type_single" value="single" checked <?php if ($meta['es_shortcode_type'][0] == 'single'){ echo ' checked="checked"'; } ?>>Standalone</label>
+					<label for="es_shortcode_type_multi"><input type="radio" name="es_shortcode_type" id="es_shortcode_type_multi" value="multi" <?php if ($meta['es_shortcode_type'][0] == 'multi'){ echo ' checked="checked"'; } ?>>Wrapping</label>
+				</div>
+
+				<div class="placeholder-content">
+					<label for="editor_shortcode_content">Placeholder Content</label>
+					<input type="text" name="editor_shortcode_content" id="editor_shortcode_content" value="<?php echo $meta['editor_shortcode_content'][0]; ?>">
+				</div>
+
+				<label>Attributes <small>Allow for customisation of shortcodes.</small></label>
 				<?php
-					if (!empty($attributes)) {
-						echo '<div class="attribute-code-list">Available Attributes: ';
-						foreach ($attributes[0] as $attribute) {
-							echo '<code>{$'.$attribute['key'].'}</code>';
+					$c = 0;
+					if ( count( $attributes ) > 0 ) {
+						foreach( $attributes[0] as $attribute ) {
+							if ( isset( $attribute['key'] ) || isset( $attribute['value'] ) ) {
+								printf( '<div class="row"><div class="col-xs-5 col-lg-4"><label>Attribute <small>Lowercase, no spaces - use underscores.</small></label><input type="text" class="update-field" name="es_attributes[%1$s][key]" value="%2$s" /></div><div class="col-xs-5 col-lg-7"><label>Hint <small>Explain what values are expected</small></label><input type="text" name="es_attributes[%1$s][value]" value="%3$s" /></div><div class="col-xs-2 col-lg-1"><label>&nbsp;</label><span class="remove-attribute button button-secondary">%4$s</span></div></div>', $c, $attribute['key'], $attribute['value'], '<span class="dashicons dashicons-trash"></span>');
+								$c = $c +1;
+							}
 						}
-						echo '</div>';
 					}
-					echo '<div class="placeholder-content attribute-code-list">For your placeholder content, use: ';
-					echo '<code>{$editor_shortcode_content}</code>';
-					echo '</div>';
 				?>
-				<textarea class="code" name="es_rendered_html" id="es_rendered_html"><?php echo $meta['es_rendered_html'][0]; ?></textarea>
+				<div id="attribute-list"></div>
+				<a class="add-attribute button button-primary button-hero" href="#">Add Attribute</a>
+				<script>
+					var $ =jQuery.noConflict();
+					$(document).ready(function() {
+						var count = <?php echo $c; ?>;
+						$('.add-attribute').click(function() {
+							count = count + 1;
+							if (count < 11) {
+								$('#attribute-list').append('<div class="row"><div class="col-xs-5 col-lg-4"><label>Attribute <small>Lowercase, no spaces - use underscores.</small></label><input type="text" class="update-field" name="es_attributes['+count+'][key]" value="" /></div><div class="col-xs-5 col-lg-7"><label>Hint <small>Explain what values are expected</small></label><input type="text" name="es_attributes['+count+'][value]" value="" /></div><div class="col-xs-2 col-lg-1"><label>&nbsp;</label><span class="remove-attribute button button-secondary"><span class="dashicons dashicons-trash"></span></span></div></div>' );
+							} else {
+								alert('Easy tiger, let\'s not add too many attributes!');
+							}
+							return false;
+						});
+						$('body').on('click', '.remove-attribute', function() {
+							$(this).parents('.row').remove();
+						});
+					});
+				</script>
 
-			</div>
+				<div class="es-shortcode-render">
+					<label for="es_rendered_html">Rendered HTML <small>What the shortcodde gets replaced with when rendered. Use variables as outlined below.</small></label>
+					<?php
+						if (!empty($attributes)) {
+							echo '<div class="attribute-code-list">Available Attributes: ';
+							foreach ($attributes[0] as $attribute) {
+								echo '<code>{$'.$attribute['key'].'}</code>';
+							}
+							echo '</div>';
+						}
+						echo '<div class="placeholder-content attribute-code-list">For your placeholder content, use: ';
+						echo '<code>{$editor_shortcode_content}</code>';
+						echo '</div>';
+					?>
+					<textarea class="code" name="es_rendered_html" id="es_rendered_html"><?php echo $meta['es_rendered_html'][0]; ?></textarea>
 
-			<!-- input name="es_rendered_shortcode" type="text" value="<?php echo htmlspecialchars($output); ?>" id="es_rendered_shortcode" /> -->
+				</div>
+
+			<?php endif; ?>
 
 		</div>
 	<?php
