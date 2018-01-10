@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Editor Shortcodes
-Plugin URI: https://www.logicdesign.co.uk
+Plugin URI: https://github.com/MOnslow/editor-shortcodes
 Description: Add shortcodes to the WordPress editor.
 Version: 1.0
 Author: Logic Design &amp; Consultancy Ltd
@@ -81,20 +81,24 @@ function editor_shortcodes_postmeta() {
 			<?php
 				$output = '';
 				$output .= '[';
-				$output .= $meta['es_shortcode'][0];
+				if (isset($meta['es_shortcode'][0])) {
+					$output .= $meta['es_shortcode'][0];
+				}
 				if (!empty($attributes)) {
 					foreach ($attributes[0] as $attribute) {
 						$output .= ' '.$attribute['key'].'="'.$attribute['value'].'"';
 					}
 				}
 				$output .= ']';
-				if ($meta['es_shortcode_type'][0] == 'multi'){
-					if (!empty($meta['editor_shortcode_content'][0])) {
-						$output .= '<br /><br />'.$meta['editor_shortcode_content'][0].'<br /><br />';
-					} else {
-						$output .= '<br /><br />Lorem ipsum dolor sit amet...<br /><br />';
+				if (isset($meta['es_shortcode_type'][0])) {
+					if ($meta['es_shortcode_type'][0] == 'multi'){
+						if (!empty($meta['editor_shortcode_content'][0])) {
+							$output .= '<br /><br />'.$meta['editor_shortcode_content'][0].'<br /><br />';
+						} else {
+							$output .= '<br /><br />Lorem ipsum dolor sit amet...<br /><br />';
+						}
+						$output .= '[/'.$meta['es_shortcode'][0].']';
 					}
-					$output .= '[/'.$meta['es_shortcode'][0].']';
 				}
 			?>
 			<input name="es_rendered_shortcode" type="hidden" value="<?php echo htmlspecialchars($output); ?>" id="es_rendered_shortcode" />
@@ -107,16 +111,16 @@ function editor_shortcodes_postmeta() {
 			<?php endif; ?>
 
 			<label for="es_shortcode">Shortcode <small>Lowercase, no spaces - use underscores.</small></label>
-			<input type="text" name="es_shortcode" id="es_shortcode" class="update-field" value="<?php echo $meta['es_shortcode'][0]; ?>" required>
+			<input type="text" name="es_shortcode" id="es_shortcode" class="update-field" value="<?php echo isset($meta['es_shortcode'][0]) ? $meta['es_shortcode'][0] : ''; ?>" required>
 
-			<?php if (!$meta['es_shortcode'][0]) : ?>
+			<?php if (!isset($meta['es_shortcode'][0])) : ?>
 
 				<p class="no-shortcode-message">Please save your shortcode for more options.</p>
 
 			<?php else : ?>
 
 				<label for="es_description">Description <small>For reference</small></label>
-				<textarea name="es_description" id="es_description"><?php echo $meta['es_description'][0]; ?></textarea>
+				<textarea name="es_description" id="es_description"><?php echo isset($meta['es_description'][0]) ? $meta['es_description'][0] : ''; ?></textarea>
 
 				<label>Type <small>Either a single line shortcode, or one that wraps content.</small></label>
 				<div class="radio-group">
@@ -126,7 +130,7 @@ function editor_shortcodes_postmeta() {
 
 				<div class="placeholder-content">
 					<label for="editor_shortcode_content">Placeholder Content</label>
-					<input type="text" name="editor_shortcode_content" id="editor_shortcode_content" value="<?php echo $meta['editor_shortcode_content'][0]; ?>">
+					<input type="text" name="editor_shortcode_content" id="editor_shortcode_content" value="<?php echo isset($meta['editor_shortcode_content'][0]) ? $meta['editor_shortcode_content'][0] : ''; ?>">
 				</div>
 
 				<label>Attributes <small>Allow for customisation of shortcodes.</small></label>
@@ -176,7 +180,7 @@ function editor_shortcodes_postmeta() {
 						echo '<code>{$editor_shortcode_content}</code>';
 						echo '</div>';
 					?>
-					<textarea class="code" name="es_rendered_html" id="es_rendered_html"><?php echo $meta['es_rendered_html'][0]; ?></textarea>
+					<textarea class="code" name="es_rendered_html" id="es_rendered_html"><?php echo isset($meta['es_rendered_html'][0]) ? $meta['es_rendered_html'][0] : ''; ?></textarea>
 
 				</div>
 
