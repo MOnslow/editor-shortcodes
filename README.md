@@ -1,4 +1,5 @@
-=== Editor Shortcodes ===
+## Editor Shortcodes
+
 Contributors: MikeyO89
 Tags: editor,shortcodes,tinymce
 License: GPL2
