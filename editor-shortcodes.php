@@ -250,8 +250,8 @@ function editor_shortcodes_fetch_list() {
 	global $wpdb;
 	$get_es_posts = $wpdb->get_results("
 		SELECT p.post_title, pm.meta_value, pm.meta_key, pm.post_id
-		FROM loki_postmeta pm
-		JOIN loki_posts p ON pm.post_id = p.ID
+		FROM {$wpdb->prefix}postmeta pm
+		JOIN {$wpdb->prefix}posts p ON pm.post_id = p.ID
 		WHERE p.post_type = 'editor_shortcodes'
 		AND p.post_status = 'publish'
 		AND pm.meta_key LIKE 'es_rendered_shortcode'
@@ -279,8 +279,8 @@ function editor_shortcodes_get_shortcodes() {
 
 	$get_es_posts = $wpdb->get_results("
 		SELECT p.post_title, pm.meta_value, pm.meta_key, pm.post_id
-		FROM loki_postmeta pm
-		JOIN loki_posts p ON pm.post_id = p.ID
+		FROM {$wpdb->prefix}postmeta pm
+		JOIN {$wpdb->prefix}posts p ON pm.post_id = p.ID
 		WHERE p.post_type = 'editor_shortcodes'
 		AND p.post_status = 'publish'
 		AND pm.meta_key LIKE 'es_shortcode'
@@ -368,8 +368,8 @@ function editor_shortcodes_empty_paragraph_fix( $content ) {
 	global $wpdb;
 	$get_es_posts = $wpdb->get_results("
 		SELECT p.post_title, pm.meta_value, pm.meta_key, pm.post_id
-		FROM loki_postmeta pm
-		JOIN loki_posts p ON pm.post_id = p.ID
+		FROM {$wpdb->prefix}postmeta pm
+		JOIN {$wpdb->prefix}posts p ON pm.post_id = p.ID
 		WHERE p.post_type = 'editor_shortcodes'
 		AND p.post_status = 'publish'
 		AND pm.meta_key LIKE 'es_shortcode'
